@@ -151,8 +151,40 @@
 
     .original-box { border:1px solid var(--border); background:var(--soft); border-radius:10px; padding:12px; margin-bottom:15px; }
     .original-box strong { display:block; font-size:12px; margin-bottom:7px; }
-    .original-box p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; max-height:180px; overflow:auto; }
-    #feedback-original-text { white-space:pre-wrap; }\n    .feedback-modal-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .original-box .original-content {
+      max-height: min(48vh, 480px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+    .original-box .original-content .paragraph {
+      font-size: calc(16px * var(--font-scale));
+      line-height: 2;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0 0 15px;
+    }
+    .original-box .original-content .paragraph:last-child { margin-bottom: 0; }
+    .original-box .original-content .paragraph.article {
+      font-size: calc(18px * var(--font-scale));
+      font-weight: 750;
+      margin-top: 0;
+    }
+    .original-box .original-content .paragraph.heading { font-weight: 750; }
+    .original-box .original-content .paragraph.part {
+      font-size: calc(19px * var(--font-scale));
+      font-weight: 750;
+      border-left: 4px solid var(--gold);
+      padding-left: 12px;
+    }
+    .original-box .original-content .paragraph.blank { height: 8px; }
+    @media (max-width: 540px) {
+      .original-box .original-content { max-height: 38dvh; padding: 10px; }
+    }
+    .feedback-modal-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
     .feedback-modal-head h2 { margin:0; }
     .dialog-x { font-size:22px; line-height:1; padding:6px 12px; }
     @media(max-width:540px) { .header-inner { flex-wrap:wrap; } .language { margin-left:auto; } .header-admin { padding:7px 9px; } dialog { padding:18px; max-height:85dvh; } }
@@ -243,7 +275,7 @@
       <input type="hidden" name="lang" id="feedback-lang" value="ne">
       <input type="hidden" name="rule" id="feedback-rule">
       <input type="hidden" name="scope" id="feedback-scope" value="general">
-      <div class="original-box hidden" id="feedback-original-box"><strong id="feedback-original-label">सम्बन्धित मूल पाठ — पढ्न मात्र</strong><p id="feedback-original-text"></p></div>
+      <div class="original-box hidden" id="feedback-original-box"><strong id="feedback-original-label">सम्बन्धित मूल पाठ — पढ्न मात्र</strong><div id="feedback-original-text" class="original-content" role="region" aria-label="Read-only original article" tabindex="0"></div></div>
       <div class="sr-only" aria-hidden="true">
         <label for="website">Website</label>
         <input id="website" name="website" tabindex="-1" autocomplete="off">
@@ -706,9 +738,21 @@
       $('feedback-original-box').classList.toggle('hidden', !record);
       const section = record ? state.sections.find(item =>
         item.type === 'article' && records()[item.start].id === record.id) : null;
-      $('feedback-original-text').textContent = section
-        ? records().slice(section.start, section.end).map(item => item.text).filter(Boolean).join('\\n\\n')
-        : (record ? record.text : '');
+      const preview = $('feedback-original-text');
+      preview.replaceChildren();
+      const articleRecords = section
+        ? records().slice(section.start, section.end)
+        : (record ? [record] : []);
+      articleRecords.forEach(item => {
+        const paragraph = create(
+          'p',
+          'paragraph ' + String(item.kind || 'paragraph').toLowerCase(),
+          item.text
+        );
+        if (!item.text) paragraph.classList.add('blank');
+        preview.append(paragraph);
+      });
+      preview.scrollTop = 0;
       $('feedback-original-label').textContent = record
         ? (state.language === 'ne' ? 'मूल पाठ (सम्पादन गर्न नमिल्ने) · ' : 'Original text (read only) · ') + record.id
         : '';
