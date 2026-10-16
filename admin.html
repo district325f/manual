@@ -3,436 +3,800 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0d3155">
-  <meta name="robots" content="noindex, nofollow">
-  <title>District 325F | Feedback Administration</title>
+  <meta name="theme-color" content="#103660">
+  <meta name="description" content="Lions International District 325F Nepal — Official bilingual digital governance manual.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./logo.png">
+  <title>District 325F | Digital Governance Manual</title>
   <style>
-    /* ============================================================
-       DISTRICT 325F — GITHUB ADMIN PANEL
-       All design styles stay inside this HTML file.
-       ============================================================ */
+    /* ==============================================================
+       District 325F Digital Manual — Responsive Design System
+       All styles remain inside index.html, as requested.
+       ============================================================== */
     :root {
-      --navy: #123a63;
-      --navy-dark: #0b2845;
-      --gold: #c99a42;
-      --bg: #f3f6fb;
+      color-scheme: light;
+      --navy: #103660;
+      --navy-dark: #092844;
+      --gold: #d6a54b;
+      --text: #1d3049;
+      --muted: #61738b;
       --surface: #ffffff;
-      --text: #192b40;
-      --muted: #67778c;
-      --border: #e1e8f1;
-      --danger: #ac303d;
-      --radius: 16px;
+      --background: #f3f6fa;
+      --border: #dce5ef;
+      --soft: #edf3f9;
+      --shadow: 0 12px 32px rgba(20, 45, 75, .07);
+      --font-scale: 1;
+    }
+    body.dark {
+      color-scheme: dark;
+      --text: #e8eef6;
+      --muted: #a8bbd1;
+      --surface: #17283c;
+      --background: #0d1b2b;
+      --border: #30445c;
+      --soft: #23374d;
+      --shadow: none;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; color: var(--text); background: var(--bg); font-family: system-ui, -apple-system, "Noto Sans Devanagari", "Nirmala UI", sans-serif; }
-    button, input, textarea, select { font: inherit; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--text); background: var(--background); font: 15px/1.65 system-ui, 'Noto Sans Devanagari', 'Nirmala UI', sans-serif; }
+    button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
     a { color: inherit; }
-    [hidden] { display: none !important; }
-    .topbar { color: #fff; background: linear-gradient(115deg, var(--navy-dark), var(--navy)); border-bottom: 3px solid var(--gold); }
-    .topbar-inner { max-width: 1240px; margin: auto; display: flex; align-items: center; gap: 13px; padding: 15px 22px; }
-    .logo { width: 49px; height: 49px; object-fit: contain; background: #fff; border-radius: 10px; padding: 5px; }
-    .brand { flex: 1; }
+    .hidden { display: none !important; }
+    .header { color: #fff; background: linear-gradient(120deg, #082541, #123f6d); border-bottom: 3px solid var(--gold); }
+    .header-inner { max-width: 1240px; margin: auto; padding: 14px 20px; display: flex; gap: 13px; align-items: center; }
+    .logo { width: 48px; height: 48px; object-fit: contain; background: white; padding: 5px; border-radius: 10px; }
+    .brand { min-width: 0; }
     .brand strong { display: block; font-size: 15px; letter-spacing: .3px; }
-    .brand small { display: block; margin-top: 3px; color: #cbd8e9; font-size: 11px; }
-    .back { border: 1px solid #ffffff70; color: #fff; padding: 9px 12px; border-radius: 9px; text-decoration: none; font-size: 12px; }
-    body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
-    .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-    #dashboard:not([hidden]) { width: 100%; }
-
-    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 12px 36px #102d5010; }
-    .login { width: min(100%, 450px); margin: 0 auto; padding: 30px; }
-    .eyebrow { font-size: 11px; color: #a67c2d; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; }
-    h1 { margin: 10px 0; font-size: clamp(23px, 3vw, 31px); }
-    h2 { font-size: 18px; margin: 0; }
-    p { line-height: 1.7; }
-    .subtle { color: var(--muted); font-size: 13px; }
-    .field { display: flex; flex-direction: column; gap: 7px; margin: 16px 0; }
-    .field label { font-size: 13px; font-weight: 650; }
-    input, textarea, select { width: 100%; padding: 12px 13px; border: 1px solid #d5deea; border-radius: 10px; color: var(--text); background: #fff; outline: none; }
-    input:focus, textarea:focus, select:focus { border-color: #3172ad; box-shadow: 0 0 0 3px #3172ad1b; }
-    .btn { border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; background: #fff; color: var(--navy); font-weight: 700; }
-    .btn:hover { background: #f0f5fa; }
-    .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
-    .btn-primary:hover { background: #1c507f; }
-    .btn:disabled { opacity: .55; cursor: wait; }
-    .login .btn { width: 100%; margin-top: 8px; }
-    .message { color: var(--muted); min-height: 24px; font-size: 13px; margin-top: 12px; overflow-wrap: anywhere; }
-    .message.error { color: var(--danger); }
-    .heading { display: flex; align-items: center; gap: 16px; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; }
-    .heading-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
-    .stat { padding: 17px; }
-    .stat strong { font-size: 27px; display: block; margin-top: 6px; }
-    .stat span { color: var(--muted); font-size: 12px; }
-    .controls { display: flex; gap: 10px; padding: 16px; flex-wrap: wrap; align-items: center; }
-    .controls input { flex: 1 1 260px; }
-    .controls select { width: auto; min-width: 150px; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { background: #f7f9fc; font-size: 11px; color: #60748b; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
-    td.message-cell { min-width: 270px; max-width: 490px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
-    .status-pill { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #eaf2fb; color: #22558c; font-size: 11px; font-weight: 800; }
-    .status-pill.resolved { background: #e5f5ec; color: #24714a; }
-    .status-pill.pending { background: #fff4df; color: #996019; }
-    .review { padding: 20px; margin-top: 17px; }
-    .review-head { display: flex; justify-content: space-between; gap: 10px; }
-    .review-grid { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; }
-    .review .btn { margin-top: 10px; }
-    .empty { text-align: center; padding: 28px; color: var(--muted); }
-    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 12px 15px 18px; }
-    .footer a { text-decoration: underline; }
-    .notice { border-left: 3px solid var(--gold); background: #fffbf2; padding: 10px 13px; border-radius: 8px; font-size: 12px; color: #6d5935; }
-    @media (max-width: 760px) {
-      .wrap { padding: 18px 12px; }
-      .topbar-inner { padding: 12px; }
+    .brand small { display: block; color: #d8e4f0; font-size: 11px; }
+    .language { display: flex; margin-left: auto; gap: 6px; }
+    .language button { border: 1px solid #ffffff70; color: #fff; background: transparent; padding: 8px 12px; border-radius: 8px; }
+    .language button.active { color: #132b48; background: var(--gold); border-color: var(--gold); font-weight: 750; }
+    .container { max-width: 1240px; margin: auto; padding: 0 20px; }
+    .hero { margin-top: 20px; padding: 27px 30px; color: #fff; background: linear-gradient(120deg, #164b7b, #0c2e50); border-radius: 18px; }
+    .eyebrow { font-size: 11px; letter-spacing: 1.5px; font-weight: 800; color: #f2ca7e; }
+    .hero h1 { max-width: 850px; font-size: clamp(22px, 3vw, 32px); line-height: 1.5; margin: 8px 0; }
+    .hero p { color: #dbe7f3; margin: 0; }
+    .hero .edition { font-size: 12px; margin-top: 12px; color: #e3eaf2; }
+    .layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 18px; margin-top: 18px; align-items: start; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); }
+    .sidebar { position: sticky; top: 12px; max-height: calc(100vh - 24px); display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-title { padding: 18px; border-bottom: 1px solid var(--border); font-weight: 750; }
+    .navigation { overflow-y: auto; padding: 9px; }
+    .nav-group { border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 5px; }
+    .nav-part { display: flex; align-items: center; gap: 7px; width: 100%; text-align: left; border: 0; background: transparent; color: var(--text); font-weight: 750; padding: 12px 10px; border-radius: 8px; }
+    .nav-part:hover, .nav-rule:hover { background: var(--soft); }
+    .nav-part span { flex: 1; }
+    .nav-rule { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); border: 0; border-radius: 7px; padding: 9px 12px 9px 24px; font-size: 13px; line-height: 1.5; }
+    .nav-rule.active { color: #2369b0; background: var(--soft); font-weight: 750; }
+    body.dark .nav-rule.active { color: #8fc4ff; }
+    .main { min-width: 0; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 13px; align-items: center; }
+    .search { flex: 1 1 240px; padding: 11px 13px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 9px; min-width: 0; }
+    .btn { border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); padding: 10px 13px; font-weight: 650; }
+    .btn:hover { background: var(--soft); }
+    .btn-primary { color: white; background: var(--navy); border-color: var(--navy); }
+    .btn-primary:hover { background: #1b4e7e; }
+    .mobile-menu { display: none; }
+    .status { color: var(--muted); font-size: 12px; padding: 10px 15px; }
+    .reader { margin-top: 13px; padding: 28px 30px; min-height: 350px; }
+    .reader-header { display: flex; gap: 14px; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); padding-bottom: 17px; margin-bottom: 20px; }
+    .reader-header h2 { margin: 5px 0 0; font-size: 21px; line-height: 1.5; }
+    .reader-header small { color: #ae8236; font-weight: 750; }
+    .reader-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .paragraph { white-space: pre-wrap; overflow-wrap: anywhere; font-size: calc(16px * var(--font-scale)); line-height: 2; margin: 0 0 15px; }
+    .paragraph.heading, .paragraph.article, .paragraph.part { font-weight: 750; color: var(--text); margin-top: 22px; }
+    .paragraph.part { font-size: calc(19px * var(--font-scale)); border-left: 4px solid var(--gold); padding-left: 12px; }
+    .paragraph.article { font-size: calc(18px * var(--font-scale)); }
+    .paragraph.blank { height: 8px; }
+    .paragraph.highlight { background: #ffefc0; color: #16283b; border-radius: 5px; padding: 5px; }
+    .reader-footer { display: flex; gap: 8px; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 18px; margin-top: 24px; }
+    .results { margin-top: 13px; padding: 20px; }
+    .result { display: block; width: 100%; padding: 14px; margin-top: 9px; text-align: left; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); }
+    .result:hover { background: var(--soft); }
+    .result small { color: var(--muted); }
+    .result p { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
+    mark { background: #ffdf82; color: #1d3049; border-radius: 2px; }
+    .feedback-bar { margin: 18px 0 26px; padding: 18px; display: flex; gap: 15px; align-items: center; justify-content: space-between; }
+    .feedback-bar h3 { margin: 0; }
+    .feedback-bar p { color: var(--muted); margin: 3px 0 0; font-size: 13px; }
+    .footer { padding: 22px; text-align: center; font-size: 12px; color: var(--muted); }
+    .footer a { margin-left: 10px; }
+    .progress { position: fixed; z-index: 30; top: 0; left: 0; height: 4px; width: 0; background: var(--gold); transition: width .1s; }
+    dialog { width: min(94vw, 540px); max-height: 90vh; overflow: auto; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 20px 70px #0005; }
+    dialog::backdrop { background: #071b30ad; }
+    .form-row { margin-bottom: 13px; }
+    .form-row label { display: block; font-weight: 700; margin-bottom: 5px; }
+    .form-row input, .form-row select, .form-row textarea { display: block; width: 100%; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+    .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .feedback-message { color: var(--muted); min-height: 24px; font-size: 13px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; position: static; max-height: 420px; }
+      .sidebar.open { display: flex; }
+      .mobile-menu { display: inline-block; }
+      .reader { padding: 21px 17px; }
+      .reader-header { flex-direction: column; }
+      .hero { padding: 23px 19px; }
+    }
+    @media (max-width: 500px) {
+      .container { padding: 0 11px; }
+      .header-inner { padding: 12px; gap: 8px; }
+      .logo { width: 41px; height: 41px; }
       .brand strong { font-size: 12px; }
       .brand small { font-size: 10px; }
-      .logo { width: 42px; height: 42px; }
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .review-grid { grid-template-columns: 1fr; }
-      .login { margin: 0 auto; padding: 22px; }
+      .language button { padding: 7px 8px; font-size: 12px; }
+      .hero { margin-top: 11px; }
+      .reader-header h2 { font-size: 18px; }
+      .feedback-bar { align-items: flex-start; flex-direction: column; }
+      .btn { padding: 9px 11px; }
+    }
+    @media print {
+      .header, .hero, .sidebar, .toolbar, .status, .reader-actions, .reader-footer, .feedback-bar, .footer { display: none !important; }
+      .container, .layout, .main { display: block; max-width: none; margin: 0; padding: 0; }
+      .reader { border: 0; box-shadow: none; }
+    }
+    .header-admin { color:#fff; text-decoration:none; white-space:nowrap; border:1px solid #ffffff75; border-radius:9px; padding:8px 12px; font-size:12px; font-weight:700; }
+    .header-admin:hover { background:#ffffff20; }
+    .article-feedback { display:inline-flex; align-items:center; gap:7px; margin-top:9px;
+      font-size:13px; padding:8px 12px; color:var(--navy); border:1px solid var(--border);
+      background:var(--soft); border-radius:9px; cursor:pointer; font-weight:600; }
+    .article-feedback:hover, .article-feedback:focus-visible { border-color:var(--navy); text-decoration:underline; }
+    .article-feedback:focus-visible { outline:2px solid var(--navy); outline-offset:2px; }
+    body.dark .article-feedback { color:#bcdcff; }
+
+    .original-box { border:1px solid var(--border); background:var(--soft); border-radius:10px; padding:12px; margin-bottom:15px; }
+    .original-box strong { display:block; font-size:12px; margin-bottom:7px; }
+    .original-box p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; max-height:180px; overflow:auto; }
+    #feedback-original-text { white-space:pre-wrap; }\n    .feedback-modal-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .feedback-modal-head h2 { margin:0; }
+    .dialog-x { font-size:22px; line-height:1; padding:6px 12px; }
+    @media(max-width:540px) { .header-inner { flex-wrap:wrap; } .language { margin-left:auto; } .header-admin { padding:7px 9px; } dialog { padding:18px; max-height:85dvh; } }
+    .footer-credit {
+      display: inline-block;
+      margin: 5px 12px;
+      font-weight: 500;
+    }
+    .footer-credit a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <img src="./logo.png" class="logo" alt="Lions International" onerror="this.hidden=true">
+  <div class="progress" id="progress"></div>
+  <header class="header">
+    <div class="header-inner">
+      <img class="logo" src="./logo.png" alt="Lions logo" onerror="this.hidden=true">
       <div class="brand">
         <strong>LIONS INTERNATIONAL</strong>
-        <small>DISTRICT 325F NEPAL · ADMINISTRATION</small>
+        <small>DISTRICT 325F NEPAL · DIGITAL MANUAL</small>
       </div>
-      <a class="back" href="./index.html">← निर्देशिका</a>
+      <div class="language" aria-label="Language">
+        <button id="lang-ne" type="button" class="active">नेपाली</button>
+        <button id="lang-en" type="button">English</button>
+      </div>
+      <a class="header-admin" id="admin-link" href="./admin.html" aria-label="Admin login">♙ Admin</a>
     </div>
   </header>
 
-  <main class="wrap">
-    <section id="login-panel" class="panel login">
-      <div class="eyebrow">Secure Administration</div>
-      <h1>Admin Login</h1>
-      
-      <form id="login-form">
-        <div class="field">
-          <label for="username">Username</label>
-          <input id="username" name="username" autocomplete="username" maxlength="120" required>
-        </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required>
-        </div>
-        <button id="login-button" class="btn btn-primary" type="submit">Login</button>
-      </form>
-      <p class="message" id="login-message" role="status" aria-live="polite"></p>
-      
+  <div class="container">
+    <section class="hero">
+      <div class="eyebrow">OFFICIAL GOVERNANCE REFERENCE</div>
+      <h1 id="hero-title">डिस्ट्रिक्ट सुशासन र संस्थागत उत्कृष्टता निर्देशिका</h1>
+      <p id="hero-description">मूल निर्देशिका जस्ताको तस्तै · सहज अध्ययन र खोजी</p>
+      <div class="edition" id="edition">Lions International District 325F Nepal</div>
+      <details class="edition" id="version-history">
+        <summary>Source &amp; Version Information / स्रोत र संस्करण</summary>
+        <p>System v1.4 · English source: Latest 5 English.docx · Nepali source: Latest 5 Nepali.docx.</p>
+        <p>Official approval and effective date must be verified by District authorities. Original source text is not modified by this reader.</p>
+      </details>
     </section>
 
-    <section id="dashboard" hidden>
-      <div class="heading">
-        <div>
-          <div class="eyebrow">Feedback Management</div>
-          <h1>Feedback Dashboard</h1>
-          <p class="subtle" id="welcome"></p>
+    <div class="layout">
+      <aside class="panel sidebar" id="sidebar">
+        <div class="sidebar-title" id="contents-title">विषयसूची</div>
+        <nav class="navigation" id="navigation" aria-label="Manual contents"></nav>
+      </aside>
+      <main class="main">
+        <div class="panel toolbar">
+          <button class="btn mobile-menu" id="menu" type="button">☰ विषयसूची</button>
+          <label class="sr-only" for="search">Search manual</label>
+          <input class="search" id="search" type="search" placeholder="नियम, धारा वा शब्द खोज्नुहोस्" autocomplete="off">
+          <button class="btn" id="smaller" type="button" title="Smaller text">A−</button>
+          <button class="btn" id="larger" type="button" title="Larger text">A+</button>
+          <button class="btn" id="dark-mode" type="button" title="Dark mode">◐</button>
+          <button class="btn" id="reading-mode" type="button" title="Reading mode">▣</button>
         </div>
-        <div class="heading-actions">
-          <button class="btn" id="audit-button" type="button">Audit History</button>
-          <button class="btn" id="refresh-button" type="button">Refresh</button>
-          <button class="btn" id="logout-button" type="button">Logout</button>
-        </div>
-      </div>
-      <div class="stats">
-        <div class="panel stat"><span>Total Feedback</span><strong id="stat-total">0</strong></div>
-        <div class="panel stat"><span>Pending</span><strong id="stat-pending">0</strong></div>
-        <div class="panel stat"><span>Reviewed</span><strong id="stat-reviewed">0</strong></div>
-        <div class="panel stat"><span>Resolved</span><strong id="stat-resolved">0</strong></div>
-      </div>
-      <section class="panel" id="feedback-section">
-        <div class="controls">
-          <input id="filter-search" type="search" placeholder="Search name, club, rule or feedback..." aria-label="Search feedback">
-          <select id="filter-status" aria-label="Filter status">
-            <option value="all">All statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Reviewed">Reviewed</option>
-            <option value="Resolved">Resolved</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Date / ID</th><th>Member</th><th>Type / Rule</th><th>Feedback</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="feedback-rows"></tbody>
-          </table>
-        </div>
-        <p class="message" id="dashboard-message" role="status"></p>
-      </section>
-      <section class="panel review" id="review-panel" hidden>
-        <div class="review-head"><h2>Review Feedback</h2><button class="btn" id="review-close" type="button">Close</button></div>
-        <p class="subtle" id="review-id"></p>
-        <div style="border:1px solid var(--border);padding:15px;border-radius:12px;margin-bottom:16px"><strong>Original manual reference (read only)</strong><p id="review-rule" class="subtle"></p><p id="review-snapshot" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:230px;overflow:auto"></p></div><strong>Member suggestion</strong><p id="review-original" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
-        <form id="review-form">
-          <div class="review-grid">
-            <div class="field"><label for="review-status">Status</label>
-              <select id="review-status"><option>Pending</option><option>Reviewed</option><option>Resolved</option></select>
-            </div>
-            <div class="field"><label for="review-remarks">Internal Admin Remarks</label>
-              <textarea id="review-remarks" rows="3" maxlength="1500"></textarea>
-            </div>
+        <div class="status" id="status" role="status">निर्देशिका लोड हुँदैछ...</div>
+        <section class="panel reader" id="reader" aria-live="polite"></section>
+        <section class="panel results hidden" id="results"></section>
+        <section class="panel feedback-bar">
+          <div>
+            <h3 id="feedback-title">सुझाव तथा प्रतिक्रिया</h3>
+
           </div>
-          <button class="btn btn-primary" id="save-review" type="submit">Save Review</button>
-        </form>
-      </section>
-      <section class="panel review" id="audit-panel" hidden>
-        <div class="review-head"><h2>Feedback Audit History</h2><button class="btn" id="audit-close" type="button">Close</button></div>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Date</th><th>Feedback ID</th><th>Old → New</th><th>Reviewed by</th><th>Remarks</th></tr></thead>
-          <tbody id="audit-rows"></tbody>
-        </table></div>
-      </section>
-    </section>
-  </main>
-  <footer class="footer">Designed &amp; Developed by <strong>Nirajan Aryal</strong> (<a href="tel:9851113811">9851113811</a>)</footer>
+          <button class="btn btn-primary" id="feedback-open" type="button">प्रतिक्रिया दिनुहोस्</button>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      Lions International · District 325F Nepal · Original text preserved
+      <span class="footer-credit">
+        Designed &amp; Developed by
+        <strong>Nirajan Aryal</strong>
+        (<a href="tel:9851113811">9851113811</a>)
+      </span>
+    </footer>
+  </div>
 
-  <!-- Hidden RPC frame. The admin UI and all CSS/JS are hosted on GitHub. -->
-  <iframe name="admin-response-frame" title="Server response" hidden></iframe>
+  <dialog id="feedback-dialog" aria-labelledby="feedback-dialog-title">
+    <div class="feedback-modal-head"><h2 id="feedback-dialog-title">सुझाव तथा प्रतिक्रिया</h2><button class="btn dialog-x" type="button" id="feedback-x" aria-label="Close feedback">×</button></div>
+    <form id="feedback-form" method="post" target="feedback-target">
+      <input type="hidden" name="action" value="feedback">
+      <input type="hidden" name="nonce" id="feedback-nonce">
+      <input type="hidden" name="lang" id="feedback-lang" value="ne">
+      <input type="hidden" name="rule" id="feedback-rule">
+      <input type="hidden" name="scope" id="feedback-scope" value="general">
+      <div class="original-box hidden" id="feedback-original-box"><strong id="feedback-original-label">सम्बन्धित मूल पाठ — पढ्न मात्र</strong><p id="feedback-original-text"></p></div>
+      <div class="sr-only" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="form-row">
+        <label for="feedback-type">प्रकार / Type</label>
+        <select name="type" id="feedback-type" required>
+          <option value="suggestion">सुझाव / Suggestion</option>
+          <option value="error">त्रुटि जानकारी / Content concern</option>
+          <option value="technical">प्राविधिक समस्या / Technical</option>
+          <option value="other">अन्य / Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="feedback-name">नाम / Name (Optional)</label>
+        <input name="name" id="feedback-name" maxlength="100" autocomplete="name">
+      </div>
+      <div class="form-row">
+        <label for="feedback-club">क्लब / Club (Optional)</label>
+        <input name="club" id="feedback-club" maxlength="120">
+      </div>
+      <div class="form-row">
+        <label for="feedback-text">सन्देश / Message *</label>
+        <textarea name="message" id="feedback-text" rows="5" minlength="10" maxlength="3000" required></textarea>
+      </div>
+      <p class="feedback-message" id="feedback-message" role="status"></p>
+      <div class="dialog-actions">
+        <button class="btn" type="button" id="feedback-close">बन्द</button>
+        <button class="btn btn-primary" type="submit" id="feedback-submit">पठाउनुहोस्</button>
+      </div>
+    </form>
+  </dialog>
+  <iframe name="feedback-target" id="feedback-target" class="hidden" title="Feedback response"></iframe>
 
   <script>
     'use strict';
 
-    /* ============================================================
-       GITHUB UI → HTTPS FORM POST → APPS SCRIPT → PRIVATE GOOGLE SHEET
-       Credentials are sent only by HTTPS POST; session is memory-only.
-       ============================================================ */
+    /* ==============================================================
+       Configuration — original Apps Script deployment URL retained.
+       Public manual reads local JSON first; Apps Script is a fallback.
+       ============================================================== */
     const CONFIG = Object.freeze({
       appsScriptUrl: 'https://script.google.com/macros/s/AKfycbx-jJumHusyGI1OgSiyyH7KxcmEle1Rfi_CiW9tOTVeKiQZxA5eLqDMiakaqG_U8MiPPQ/exec',
-      requestTimeoutMs: 30000
+      dataPaths: { ne: './ne.json', en: './en.json' },
+      storagePrefix: 'district325f-manual-v11'
     });
 
+    const LABELS = {
+      ne: {
+        title: 'डिस्ट्रिक्ट सुशासन र संस्थागत उत्कृष्टता निर्देशिका',
+        description: 'मूल निर्देशिका जस्ताको तस्तै · सहज अध्ययन र खोजी',
+        contents: 'विषयसूची', search: 'नियम, धारा वा शब्द खोज्नुहोस्',
+        feedback: 'सुझाव तथा प्रतिक्रिया', feedbackSubtitle: '',
+        feedbackButton: 'प्रतिक्रिया दिनुहोस्', prev: '← अघिल्लो', next: 'अर्को →',
+        share: 'शेयर', bookmark: 'बुकमार्क', bookmarked: 'बुकमार्क हटाउनुहोस्',
+        listen: 'सुन्नुहोस्', stop: 'रोक्नुहोस्', start: 'सुरुदेखि पढ्नुहोस्',
+        saved: 'बुकमार्कहरू', results: 'खोजी नतिजा', empty: 'मिल्दो पाठ भेटिएन।',
+        loading: 'निर्देशिका लोड हुँदैछ...', error: 'डाटा लोड हुन सकेन। GitHub मा ne.json र en.json जाँच्नुहोस्।',
+        paragraphs: 'मूल अनुच्छेद', copy: 'लिंक कपी भयो।', feedbackSuccess: 'प्रतिक्रिया सुरक्षित भयो। धन्यवाद! ID: ',
+        feedbackError: 'प्रतिक्रिया सुरक्षित भएन। कृपया फेरि प्रयास गर्नुहोस्।',
+        sending: 'पठाउँदै...', intro: 'प्रारम्भिक सामग्री', read: 'पढ्ने मोड', normal: 'सामान्य मोड'
+      },
+      en: {
+        title: 'District Governance and Organizational Excellence Manual',
+        description: 'Exact original text · Easy reading and search',
+        contents: 'Contents', search: 'Search rules, articles or keywords',
+        feedback: 'Feedback & Suggestions', feedbackSubtitle: '',
+        feedbackButton: 'Send Feedback', prev: '← Previous', next: 'Next →',
+        share: 'Share', bookmark: 'Bookmark', bookmarked: 'Remove bookmark',
+        listen: 'Listen', stop: 'Stop', start: 'Read from beginning',
+        saved: 'Bookmarks', results: 'Search results', empty: 'No matching text found.',
+        loading: 'Loading manual...', error: 'Could not load data. Check ne.json and en.json on GitHub.',
+        paragraphs: 'Original paragraphs', copy: 'Link copied.', feedbackSuccess: 'Feedback saved. Thank you! ID: ',
+        feedbackError: 'Could not save feedback. Please try again.',
+        sending: 'Submitting...', intro: 'Introduction', read: 'Reading mode', normal: 'Normal mode'
+      }
+    };
+
+    const state = {
+      language: 'ne', datasets: {}, sections: [], sectionIndex: 0,
+      fontScale: 1, queryTimer: null, activeRecord: '',
+      bookmarks: [], readingMode: false, feedbackTimer: null, pendingNonce: '',
+      openParts: new Set()
+    };
     const $ = id => document.getElementById(id);
-    const state = { requests: new Map(), feedback: [], selectedId: '', token: '' };
+    const label = () => LABELS[state.language];
+    const records = () => state.datasets[state.language].records;
+    const create = (tag, className, text) => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    };
 
-    function setMessage(id, text, error = false) {
-      const element = $(id);
-      element.textContent = text;
-      element.classList.toggle('error', error);
+    function store(key, value) {
+      try { localStorage.setItem(CONFIG.storagePrefix + key, JSON.stringify(value)); } catch (_) {}
+    }
+    function restore(key, fallback) {
+      try {
+        const value = localStorage.getItem(CONFIG.storagePrefix + key);
+        return value === null ? fallback : JSON.parse(value);
+      } catch (_) { return fallback; }
     }
 
-    function makeCell(row, value, className = '') {
-      const cell = document.createElement('td');
-      if (className) cell.className = className;
-      cell.textContent = String(value == null ? '' : value);
-      row.append(cell);
-      return cell;
+    /* --------------------- Data loading and integrity --------------------- */
+    function validateDataset(data, language) {
+      if (!data || data.language !== language || !Array.isArray(data.records) || !data.records.length) {
+        throw new Error('Invalid dataset');
+      }
+      const ids = new Set();
+      data.records.forEach((record, index) => {
+        if (!record || typeof record.text !== 'string' || typeof record.id !== 'string' ||
+            record.no !== index + 1 || ids.has(record.id)) {
+          throw new Error('Invalid record sequence at ' + index);
+        }
+        ids.add(record.id);
+      });
+      return data;
     }
 
-    function request(action, args = {}) {
+    function loadFromApi(language) {
       return new Promise((resolve, reject) => {
-        const nonce = crypto.randomUUID
-          ? crypto.randomUUID().replace(/-/g, '')
-          : String(Date.now()) + String(Math.random()).slice(2);
-        const timeout = setTimeout(() => {
-          state.requests.delete(nonce);
-          reject(new Error('सर्भरबाट समयमा जवाफ आएन। Deployment र Access जाँच्नुहोस्।'));
-        }, CONFIG.requestTimeoutMs);
-        state.requests.set(nonce, { resolve, reject, timeout });
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = CONFIG.appsScriptUrl;
-        form.target = 'admin-response-frame';
-        form.hidden = true;
-        const fields = { action: 'admin_' + action, nonce, token: state.token, ...args };
-        Object.entries(fields).forEach(([key, value]) => {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = String(value == null ? '' : value);
-          form.append(input);
-        });
-        document.body.append(form);
-        form.submit();
-        form.remove();
+        if (!CONFIG.appsScriptUrl) return reject(new Error('No API configured'));
+        const callback = 'manualCallback_' + language + '_' + Date.now();
+        const script = document.createElement('script');
+        let finished = false;
+        const timer = setTimeout(() => finish(new Error('API timeout')), 18000);
+        function finish(error, value) {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timer);
+          delete window[callback];
+          script.remove();
+          error ? reject(error) : resolve(value);
+        }
+        window[callback] = response => {
+          if (!response || !response.ok) return finish(new Error(response?.error || 'API error'));
+          finish(null, { language, records: response.records });
+        };
+        script.onerror = () => finish(new Error('API network error'));
+        script.src = CONFIG.appsScriptUrl + '?action=manual&lang=' + language + '&callback=' + callback;
+        document.head.append(script);
       });
     }
+
+    async function loadLanguage(language) {
+      if (state.datasets[language]) return;
+      try {
+        const response = await fetch(CONFIG.dataPaths[language], { cache: 'no-cache' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        state.datasets[language] = validateDataset(await response.json(), language);
+      } catch (error) {
+        state.datasets[language] = validateDataset(await loadFromApi(language), language);
+      }
+    }
+
+    /* ----------------------- Sections and navigation ----------------------- */
+    function buildSections(items) {
+      const sections = [{ start: 0, title: label().intro, type: 'intro', parent: -1 }];
+      let currentPart = -1;
+      items.forEach((record, index) => {
+        const kind = String(record.kind || '').toLowerCase();
+        if (index === 0 || (kind !== 'part' && kind !== 'article')) return;
+        if (kind === 'part') currentPart = sections.length;
+        sections.push({ start: index, title: record.text.trim(), type: kind,
+          parent: kind === 'article' ? currentPart : -1 });
+      });
+      return sections.map((section, index) => ({
+        ...section,
+        end: index + 1 < sections.length ? sections[index + 1].start : items.length
+      }));
+    }
+
+    function sectionForRecord(recordIndex) {
+      let found = 0;
+      state.sections.forEach((section, index) => {
+        if (section.start <= recordIndex) found = index;
+      });
+      return found;
+    }
+
+    function navigationButton(text, sectionIndex, className) {
+      const button = create('button', className, text);
+      button.type = 'button';
+      button.addEventListener('click', () => openSection(sectionIndex));
+      return button;
+    }
+
+    function renderNavigation() {
+      const navigation = $('navigation');
+      navigation.replaceChildren();
+      navigation.append(navigationButton(label().start, 0, 'nav-part'));
+      const saved = create('button', 'nav-part', '☆ ' + label().saved + ' (' + state.bookmarks.length + ')');
+      saved.type = 'button';
+      saved.addEventListener('click', showBookmarks);
+      navigation.append(saved);
+      let currentGroup = null;
+      state.sections.forEach((section, index) => {
+        if (index === 0) return;
+        if (section.type === 'part') {
+          const group = create('div', 'nav-group');
+          const header = create('button', 'nav-part');
+          const arrow = create('span', '', section.title);
+          const symbol = create('b', '', state.openParts.has(index) ? '−' : '+');
+          header.append(arrow, symbol);
+          const children = create('div');
+          children.hidden = !state.openParts.has(index);
+          header.addEventListener('click', () => {
+            state.openParts.has(index) ? state.openParts.delete(index) : state.openParts.add(index);
+            children.hidden = !state.openParts.has(index);
+            symbol.textContent = children.hidden ? '+' : '−';
+            openSection(index, null, false);
+          });
+          group.append(header, children);
+          navigation.append(group);
+          currentGroup = children;
+        } else {
+          const button = navigationButton(section.title, index,
+            'nav-rule' + (index === state.sectionIndex ? ' active' : ''));
+          (currentGroup || navigation).append(button);
+        }
+      });
+    }
+
+    function currentBookmarkId() {
+      return state.language + ':' + (state.activeRecord || records()[state.sections[state.sectionIndex].start].id);
+    }
+
+    function renderReader() {
+      const reader = $('reader');
+      reader.replaceChildren();
+      const section = state.sections[state.sectionIndex];
+      const heading = create('div');
+      heading.append(create('small', '', label().contents), create('h2', '', section.title));
+      const actions = create('div', 'reader-actions');
+      const share = create('button', 'btn', '↗ ' + label().share);
+      share.addEventListener('click', shareRule);
+      const bookmark = create('button', 'btn');
+      bookmark.textContent = state.bookmarks.includes(currentBookmarkId()) ? '★ ' + label().bookmarked : '☆ ' + label().bookmark;
+      bookmark.addEventListener('click', toggleBookmark);
+      const listen = create('button', 'btn', '▶ ' + label().listen);
+      listen.addEventListener('click', () => toggleSpeech(listen));
+      actions.append(bookmark, share, listen);
+      const header = create('div', 'reader-header');
+      header.append(heading, actions);
+      // One contextual feedback action per official Article heading, never per paragraph.
+      // The article's original record ID is used as the immutable feedback reference.
+      if (section.type === 'article') {
+        const articleRecord = records()[section.start];
+        const suggest = create('button', 'article-feedback',
+          state.language === 'ne' ? '✎ यस धारामा सुझाव दिनुहोस्' : '✎ Suggest on this article');
+        suggest.type = 'button';
+        suggest.setAttribute('aria-label', (state.language === 'ne'
+          ? 'यस धारामा सुझाव दिनुहोस्: ' : 'Suggest on article: ') + section.title);
+        suggest.addEventListener('click', () => openFeedback(articleRecord.id));
+        heading.append(suggest);
+      }
+      reader.append(header);
+      const body = create('div');
+      records().slice(section.start, section.end).forEach(record => {
+        const paragraph = create('p', 'paragraph ' + String(record.kind || 'paragraph').toLowerCase(), record.text);
+        paragraph.id = 'rule-' + record.id;
+        if (!record.text) paragraph.classList.add('blank');
+        body.append(paragraph);
+      });
+      reader.append(body);
+      const footer = create('div', 'reader-footer');
+      const previous = create('button', 'btn', label().prev);
+      const next = create('button', 'btn', label().next);
+      previous.disabled = state.sectionIndex === 0;
+      next.disabled = state.sectionIndex === state.sections.length - 1;
+      previous.addEventListener('click', () => openSection(state.sectionIndex - 1));
+      next.addEventListener('click', () => openSection(state.sectionIndex + 1));
+      footer.append(previous, next);
+      reader.append(footer);
+      reader.classList.remove('hidden');
+      $('results').classList.add('hidden');
+      $('status').textContent = records().length + ' ' + label().paragraphs + ' · ' +
+        (state.sectionIndex + 1) + '/' + state.sections.length;
+    }
+
+    function openSection(index, recordId = null, scroll = true) {
+      if (index < 0 || index >= state.sections.length) return;
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      state.sectionIndex = index;
+      state.activeRecord = recordId || records()[state.sections[index].start].id;
+      renderNavigation();
+      renderReader();
+      $('sidebar').classList.remove('open');
+      const url = new URL(location.href);
+      url.searchParams.set('lang', state.language);
+      url.searchParams.set('rule', state.activeRecord);
+      url.searchParams.delete('section');
+      history.replaceState(null, '', url);
+      store('position', { language: state.language, record: state.activeRecord });
+      if (recordId) {
+        const paragraph = document.getElementById('rule-' + recordId);
+        if (paragraph) {
+          paragraph.classList.add('highlight');
+          if (scroll) paragraph.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+      }
+      if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ------------------------ Search and bookmarks ------------------------ */
+    function highlightText(container, text, query) {
+      if (!query) { container.textContent = text; return; }
+      const lower = text.toLocaleLowerCase();
+      const needle = query.toLocaleLowerCase();
+      let position = 0;
+      while (position < text.length) {
+        const found = lower.indexOf(needle, position);
+        if (found < 0) { container.append(document.createTextNode(text.slice(position))); break; }
+        container.append(document.createTextNode(text.slice(position, found)));
+        container.append(create('mark', '', text.slice(found, found + query.length)));
+        position = found + query.length;
+      }
+    }
+
+    function renderResultList(items, heading, query = '') {
+      const container = $('results');
+      container.replaceChildren(create('h2', '', heading + ' (' + items.length + ')'));
+      if (!items.length) container.append(create('p', '', label().empty));
+      items.slice(0, 250).forEach(({ record, index }) => {
+        const button = create('button', 'result');
+        button.type = 'button';
+        button.append(create('small', '', record.id));
+        const text = create('p');
+        highlightText(text, record.text, query);
+        button.append(text);
+        button.addEventListener('click', () => {
+          $('search').value = '';
+          openSection(sectionForRecord(index), record.id);
+        });
+        container.append(button);
+      });
+      $('reader').classList.add('hidden');
+      container.classList.remove('hidden');
+      $('status').textContent = heading + ': ' + items.length;
+    }
+
+    function searchManual(query) {
+      query = query.trim();
+      if (!query) { renderReader(); return; }
+      const matches = [];
+      records().forEach((record, index) => {
+        if (record.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()) ||
+            record.id.toLowerCase().includes(query.toLowerCase())) matches.push({ record, index });
+      });
+      renderResultList(matches, label().results, query);
+    }
+
+    function toggleBookmark() {
+      const id = currentBookmarkId();
+      state.bookmarks = state.bookmarks.includes(id) ?
+        state.bookmarks.filter(value => value !== id) : [...state.bookmarks, id];
+      store('bookmarks', state.bookmarks);
+      renderNavigation();
+      renderReader();
+    }
+
+    function showBookmarks() {
+      const matches = [];
+      records().forEach((record, index) => {
+        if (state.bookmarks.includes(state.language + ':' + record.id)) matches.push({ record, index });
+      });
+      renderResultList(matches, label().saved);
+    }
+
+    /* ------------------------- Reading enhancements ------------------------- */
+    async function shareRule() {
+      const url = location.href;
+      try {
+        if (navigator.share) await navigator.share({ title: label().title, url });
+        else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(url);
+          alert(label().copy);
+        } else prompt('Copy link:', url);
+      } catch (error) {
+        if (error.name !== 'AbortError') prompt('Copy link:', url);
+      }
+    }
+
+    function toggleSpeech(button) {
+      if (!('speechSynthesis' in window)) {
+        alert('Text-to-speech is not available in this browser.');
+        return;
+      }
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        button.textContent = '▶ ' + label().listen;
+        return;
+      }
+      const section = state.sections[state.sectionIndex];
+      const text = records().slice(section.start, section.end).map(record => record.text).join('\n');
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = state.language === 'ne' ? 'ne-NP' : 'en-US';
+      utterance.rate = .92;
+      utterance.onend = () => { button.textContent = '▶ ' + label().listen; };
+      utterance.onerror = () => { button.textContent = '▶ ' + label().listen; };
+      button.textContent = '■ ' + label().stop;
+      speechSynthesis.speak(utterance);
+    }
+
+    function updateProgress() {
+      const height = document.documentElement.scrollHeight - innerHeight;
+      const ratio = height <= 0 ? 0 : scrollY / height;
+      $('progress').style.width = Math.max(0, Math.min(100, ratio * 100)) + '%';
+    }
+
+    function updateLabels() {
+      const t = label();
+      document.documentElement.lang = state.language;
+      $('hero-title').textContent = t.title;
+      $('hero-description').textContent = t.description;
+      $('contents-title').textContent = t.contents;
+      $('search').placeholder = t.search;
+      $('feedback-title').textContent = t.feedback;
+      if ($('feedback-subtitle')) $('feedback-subtitle').textContent = t.feedbackSubtitle;
+      $('feedback-open').textContent = t.feedbackButton;
+      $('feedback-dialog-title').textContent = t.feedback;
+      $('feedback-lang').value = state.language;
+      $('lang-ne').classList.toggle('active', state.language === 'ne');
+      $('lang-en').classList.toggle('active', state.language === 'en');
+      $('menu').textContent = '☰ ' + t.contents;
+      $('reading-mode').textContent = state.readingMode ? t.normal : t.read;
+    }
+
+    async function changeLanguage(language, initial = false) {
+      if (!LABELS[language]) return;
+      state.language = language;
+      updateLabels();
+      $('status').textContent = label().loading;
+      $('reader').textContent = label().loading;
+      $('reader').classList.remove('hidden');
+      $('results').classList.add('hidden');
+      try {
+        await loadLanguage(language);
+        state.sections = buildSections(records());
+        state.openParts = new Set(state.sections.map((s, i) => s.type === 'part' ? i : -1).filter(i => i >= 0));
+        const params = new URLSearchParams(location.search);
+        const recordId = initial ? params.get('rule') : null;
+        const index = recordId ? records().findIndex(record => record.id === recordId) : -1;
+        // Independent source documents: do not infer bilingual clause equivalence.
+        openSection(index >= 0 ? sectionForRecord(index) : 0, index >= 0 ? recordId : null, false);
+        if ($('search').value) searchManual($('search').value);
+      } catch (error) {
+        $('reader').textContent = label().error;
+        $('status').textContent = String(error.message || error);
+      }
+    }
+
+    /* --------------------- Feedback: verified save response --------------------- */
+    function openFeedback(ruleId = '') {
+      const record = ruleId ? records().find(item => item.id === ruleId) : null;
+      $('feedback-rule').value = record ? record.id : '';
+      $('feedback-scope').value = record ? 'rule' : 'general';
+      $('feedback-original-box').classList.toggle('hidden', !record);
+      const section = record ? state.sections.find(item =>
+        item.type === 'article' && records()[item.start].id === record.id) : null;
+      $('feedback-original-text').textContent = section
+        ? records().slice(section.start, section.end).map(item => item.text).filter(Boolean).join('\\n\\n')
+        : (record ? record.text : '');
+      $('feedback-original-label').textContent = record
+        ? (state.language === 'ne' ? 'मूल पाठ (सम्पादन गर्न नमिल्ने) · ' : 'Original text (read only) · ') + record.id
+        : '';
+      $('feedback-lang').value = state.language;
+      $('feedback-message').textContent = '';
+      $('feedback-dialog').showModal();
+    }
+
+    function finishFeedback(success, text) {
+      clearTimeout(state.feedbackTimer);
+      state.pendingNonce = '';
+      $('feedback-submit').disabled = false;
+      $('feedback-submit').textContent = state.language === 'ne' ? 'पठाउनुहोस्' : 'Submit';
+      $('feedback-message').textContent = text;
+      if (success) $('feedback-form').reset();
+    }
+
+    $('feedback-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (state.pendingNonce) return;
+      const form = $('feedback-form');
+      if (!form.reportValidity()) return;
+      const nonce = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2));
+      state.pendingNonce = nonce;
+      $('feedback-nonce').value = nonce;
+      $('feedback-lang').value = state.language;
+      form.action = CONFIG.appsScriptUrl;
+      $('feedback-submit').disabled = true;
+      $('feedback-submit').textContent = label().sending;
+      $('feedback-message').textContent = label().sending;
+      state.feedbackTimer = setTimeout(() => finishFeedback(false, label().feedbackError + ' (timeout)'), 30000);
+      HTMLFormElement.prototype.submit.call(form);
+    });
 
     window.addEventListener('message', event => {
       if (!/^https:\/\/(?:script\.google\.com|[a-z0-9.-]+\.googleusercontent\.com)$/.test(event.origin)) return;
-      const message = event.data;
-      if (!message || message.source !== 'district325f-admin-post') return;
-      const pending = state.requests.get(message.nonce);
-      if (!pending) return;
-      clearTimeout(pending.timeout);
-      state.requests.delete(message.nonce);
-      if (message.ok) pending.resolve(message.data);
-      else pending.reject(new Error(message.error || 'Request failed'));
+      const data = event.data;
+      if (!data || data.source !== 'district325f-feedback' || !state.pendingNonce || data.nonce !== state.pendingNonce) return;
+      finishFeedback(Boolean(data.ok), data.ok ? label().feedbackSuccess + data.id :
+        label().feedbackError + ' ' + (data.error || ''));
     });
 
-    async function loadFeedback() {
-      setMessage('dashboard-message', 'Loading feedback...');
-      try {
-        state.feedback = await request('list');
-        updateStats();
-        renderFeedback();
-        setMessage('dashboard-message', state.feedback.length + ' feedback records loaded.');
-      } catch (error) {
-        setMessage('dashboard-message', error.message, true);
-        if (/session expired|inactive or removed|login required/i.test(error.message)) showLogin();
-      }
-    }
-
-    function updateStats() {
-      $('stat-total').textContent = state.feedback.length;
-      ['Pending', 'Reviewed', 'Resolved'].forEach(status => {
-        $('stat-' + status.toLowerCase()).textContent =
-          state.feedback.filter(item => item.Status === status).length;
-      });
-    }
-
-    function renderFeedback() {
-      const search = $('filter-search').value.trim().toLowerCase();
-      const status = $('filter-status').value;
-      const tbody = $('feedback-rows');
-      tbody.replaceChildren();
-      const filtered = state.feedback.filter(item => {
-        const content = [item.Feedback_ID, item.Name, item.Club, item.Type,
-          item.Rule_ID, item.Message].join(' ').toLowerCase();
-        return (status === 'all' || item.Status === status) && content.includes(search);
-      });
-      if (!filtered.length) {
-        const row = document.createElement('tr');
-        const cell = makeCell(row, 'No feedback matches this filter.');
-        cell.colSpan = 6;
-        cell.className = 'empty';
-        tbody.append(row);
-        return;
-      }
-      filtered.forEach(item => {
-        const row = document.createElement('tr');
-        makeCell(row, item.Submitted_At + '\n' + item.Feedback_ID);
-        makeCell(row, [item.Name || 'Anonymous', item.Club || '—'].join('\n'));
-        makeCell(row, [item.Type, item.Language, item.Rule_ID || '—'].join(' · '));
-        makeCell(row, item.Message, 'message-cell');
-        const statusCell = document.createElement('td');
-        const pill = document.createElement('span');
-        pill.className = 'status-pill ' + String(item.Status).toLowerCase();
-        pill.textContent = item.Status;
-        statusCell.append(pill);
-        row.append(statusCell);
-        const actionCell = document.createElement('td');
-        const button = document.createElement('button');
-        button.className = 'btn';
-        button.type = 'button';
-        button.textContent = 'Review';
-        button.addEventListener('click', () => openReview(item));
-        actionCell.append(button);
-        row.append(actionCell);
-        tbody.append(row);
-      });
-    }
-
-    function openReview(item) {
-      state.selectedId = item.Feedback_ID;
-      $('review-id').textContent = item.Feedback_ID + ' · ' + item.Submitted_At;
-      $('review-original').textContent = item.Message;
-      $('review-rule').textContent = [item.Feedback_Scope || 'General', item.Language, item.Rule_ID, item.Rule_Title].filter(Boolean).join(' · ');
-      $('review-snapshot').textContent = item.Original_Text_Snapshot || 'General feedback — no rule selected.';
-      $('review-status').value = item.Status;
-      $('review-remarks').value = item.Admin_Remarks || '';
-      $('review-panel').hidden = false;
-      $('review-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function showLogin() {
-      $('login-panel').hidden = false;
-      $('dashboard').hidden = true;
-      $('password').value = '';
-      state.token = '';
-    }
-
-    $('login-form').addEventListener('submit', async event => {
-      event.preventDefault();
-      if (!$('username').value.trim() || !$('password').value) {
-        setMessage('login-message', 'Username र Password भर्नुहोस्।', true);
-        return;
-      }
-      $('login-button').disabled = true;
-      $('login-button').textContent = 'Verifying...';
-      setMessage('login-message', '');
-      try {
-        const result = await request('login', {
-          username: $('username').value,
-          password: $('password').value
-        });
-        state.token = result.token;
-        $('password').value = '';
-        $('login-panel').hidden = true;
-        $('dashboard').hidden = false;
-        $('welcome').textContent = 'Signed in as ' + result.username;
-        await loadFeedback();
-      } catch (error) {
-        setMessage('login-message', error.message, true);
-      } finally {
-        $('login-button').disabled = false;
-        $('login-button').textContent = 'Login';
-      }
+    /* ----------------------------- Event wiring ----------------------------- */
+    $('lang-ne').addEventListener('click', () => changeLanguage('ne'));
+    $('lang-en').addEventListener('click', () => changeLanguage('en'));
+    $('menu').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+    $('search').addEventListener('input', event => {
+      clearTimeout(state.queryTimer);
+      state.queryTimer = setTimeout(() => searchManual(event.target.value), 160);
     });
+    $('smaller').addEventListener('click', () => changeFont(-.1));
+    $('larger').addEventListener('click', () => changeFont(.1));
 
-    $('review-form').addEventListener('submit', async event => {
-      event.preventDefault();
-      $('save-review').disabled = true;
-      setMessage('dashboard-message', 'Saving review...');
-      try {
-        await request('update', {
-          id: state.selectedId,
-          status: $('review-status').value,
-          remarks: $('review-remarks').value
-        });
-        $('review-panel').hidden = true;
-        await loadFeedback();
-      } catch (error) {
-        setMessage('dashboard-message', error.message, true);
-      } finally {
-        $('save-review').disabled = false;
-      }
+    function changeFont(delta) {
+      state.fontScale = Math.max(.85, Math.min(1.6, +(state.fontScale + delta).toFixed(2)));
+      document.documentElement.style.setProperty('--font-scale', state.fontScale);
+      store('fontScale', state.fontScale);
+    }
+
+    $('dark-mode').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      store('dark', document.body.classList.contains('dark'));
     });
-
-    $('audit-button').addEventListener('click', async () => {
-      $('audit-panel').hidden = false;
-      const tbody = $('audit-rows');
-      tbody.replaceChildren();
-      try {
-        const entries = await request('audit');
-        entries.forEach(item => {
-          const row = document.createElement('tr');
-          makeCell(row, item.Date);
-          makeCell(row, item.Feedback_ID);
-          makeCell(row, item.Old_Status + ' → ' + item.New_Status);
-          makeCell(row, item.Reviewed_By);
-          makeCell(row, item.Admin_Remarks);
-          tbody.append(row);
-        });
-        if (!entries.length) {
-          const row = document.createElement('tr');
-          const cell = makeCell(row, 'No review history yet.');
-          cell.colSpan = 5;
-          tbody.append(row);
-        }
-        $('audit-panel').scrollIntoView({ behavior: 'smooth' });
-      } catch (error) {
-        setMessage('dashboard-message', error.message, true);
-      }
+    $('reading-mode').addEventListener('click', () => {
+      state.readingMode = !state.readingMode;
+      $('sidebar').classList.toggle('hidden', state.readingMode);
+      document.querySelector('.layout').style.gridTemplateColumns = state.readingMode ? 'minmax(0, 1fr)' : '';
+      updateLabels();
     });
+    $('feedback-open').addEventListener('click', () => openFeedback());
+    $('feedback-x').addEventListener('click', () => $('feedback-dialog').close());
+    $('feedback-dialog').addEventListener('click', event => { if (event.target === $('feedback-dialog')) $('feedback-dialog').close(); });
+    $('feedback-close').addEventListener('click', () => $('feedback-dialog').close());
+    addEventListener('scroll', updateProgress, { passive: true });
+    addEventListener('resize', updateProgress);
 
-    $('logout-button').addEventListener('click', async () => {
-      try { await request('logout'); } catch (_) {}
-      showLogin();
-      setMessage('login-message', '');
-    });
+    /* ------------------------------ Initialize ------------------------------ */
+    state.bookmarks = restore('bookmarks', []);
+    state.fontScale = restore('fontScale', 1);
+    document.documentElement.style.setProperty('--font-scale', state.fontScale);
+    document.body.classList.toggle('dark', restore('dark', false));
+    $('admin-link').href = './admin.html';
+    const startLanguage = new URLSearchParams(location.search).get('lang');
+    changeLanguage(startLanguage === 'en' ? 'en' : 'ne', true);
 
-    $('refresh-button').addEventListener('click', loadFeedback);
-    $('review-close').addEventListener('click', () => { $('review-panel').hidden = true; });
-    $('audit-close').addEventListener('click', () => { $('audit-panel').hidden = true; });
-    $('filter-search').addEventListener('input', renderFeedback);
-    $('filter-status').addEventListener('change', renderFeedback);
-
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
   </script>
 </body>
 </html>
