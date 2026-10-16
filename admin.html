@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d3155">
+  <meta name="robots" content="noindex, nofollow">
+  <title>District 325F | Feedback Administration</title>
+  <style>
+    /* ============================================================
+       DISTRICT 325F — GITHUB ADMIN PANEL
+       All design styles stay inside this HTML file.
+       ============================================================ */
+    :root {
+      --navy: #123a63;
+      --navy-dark: #0b2845;
+      --gold: #c99a42;
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --text: #192b40;
+      --muted: #67778c;
+      --border: #e1e8f1;
+      --danger: #ac303d;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--text); background: var(--bg); font-family: system-ui, -apple-system, "Noto Sans Devanagari", "Nirmala UI", sans-serif; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    [hidden] { display: none !important; }
+    .topbar { color: #fff; background: linear-gradient(115deg, var(--navy-dark), var(--navy)); border-bottom: 3px solid var(--gold); }
+    .topbar-inner { max-width: 1240px; margin: auto; display: flex; align-items: center; gap: 13px; padding: 15px 22px; }
+    .logo { width: 49px; height: 49px; object-fit: contain; background: #fff; border-radius: 10px; padding: 5px; }
+    .brand { flex: 1; }
+    .brand strong { display: block; font-size: 15px; letter-spacing: .3px; }
+    .brand small { display: block; margin-top: 3px; color: #cbd8e9; font-size: 11px; }
+    .back { border: 1px solid #ffffff70; color: #fff; padding: 9px 12px; border-radius: 9px; text-decoration: none; font-size: 12px; }
+    .wrap { max-width: 1240px; margin: 25px auto; padding: 0 20px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 12px 36px #102d5010; }
+    .login { width: min(100%, 450px); margin: 65px auto; padding: 30px; }
+    .eyebrow { font-size: 11px; color: #a67c2d; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; }
+    h1 { margin: 10px 0; font-size: clamp(23px, 3vw, 31px); }
+    h2 { font-size: 18px; margin: 0; }
+    p { line-height: 1.7; }
+    .subtle { color: var(--muted); font-size: 13px; }
+    .field { display: flex; flex-direction: column; gap: 7px; margin: 16px 0; }
+    .field label { font-size: 13px; font-weight: 650; }
+    input, textarea, select { width: 100%; padding: 12px 13px; border: 1px solid #d5deea; border-radius: 10px; color: var(--text); background: #fff; outline: none; }
+    input:focus, textarea:focus, select:focus { border-color: #3172ad; box-shadow: 0 0 0 3px #3172ad1b; }
+    .btn { border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; background: #fff; color: var(--navy); font-weight: 700; }
+    .btn:hover { background: #f0f5fa; }
+    .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn-primary:hover { background: #1c507f; }
+    .btn:disabled { opacity: .55; cursor: wait; }
+    .login .btn { width: 100%; margin-top: 8px; }
+    .message { color: var(--muted); min-height: 24px; font-size: 13px; margin-top: 12px; overflow-wrap: anywhere; }
+    .message.error { color: var(--danger); }
+    .heading { display: flex; align-items: center; gap: 16px; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; }
+    .heading-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .stat { padding: 17px; }
+    .stat strong { font-size: 27px; display: block; margin-top: 6px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .controls { display: flex; gap: 10px; padding: 16px; flex-wrap: wrap; align-items: center; }
+    .controls input { flex: 1 1 260px; }
+    .controls select { width: auto; min-width: 150px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: #f7f9fc; font-size: 11px; color: #60748b; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
+    td.message-cell { min-width: 270px; max-width: 490px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .status-pill { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #eaf2fb; color: #22558c; font-size: 11px; font-weight: 800; }
+    .status-pill.resolved { background: #e5f5ec; color: #24714a; }
+    .status-pill.pending { background: #fff4df; color: #996019; }
+    .review { padding: 20px; margin-top: 17px; }
+    .review-head { display: flex; justify-content: space-between; gap: 10px; }
+    .review-grid { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; }
+    .review .btn { margin-top: 10px; }
+    .empty { text-align: center; padding: 28px; color: var(--muted); }
+    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px 15px; }
+    .footer a { text-decoration: underline; }
+    .notice { border-left: 3px solid var(--gold); background: #fffbf2; padding: 10px 13px; border-radius: 8px; font-size: 12px; color: #6d5935; }
+    @media (max-width: 760px) {
+      .wrap { padding: 0 12px; margin: 15px auto; }
+      .topbar-inner { padding: 12px; }
+      .brand strong { font-size: 12px; }
+      .brand small { font-size: 10px; }
+      .logo { width: 42px; height: 42px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .review-grid { grid-template-columns: 1fr; }
+      .login { margin: 35px auto; padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <img src="./logo.png" class="logo" alt="Lions International" onerror="this.hidden=true">
+      <div class="brand">
+        <strong>LIONS INTERNATIONAL</strong>
+        <small>DISTRICT 325F NEPAL · ADMINISTRATION</small>
+      </div>
+      <a class="back" href="./index.html">← निर्देशिका</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="login-panel" class="panel login">
+      <div class="eyebrow">Secure Administration</div>
+      <h1>Admin Login</h1>
+      <p class="subtle">Google Sheet को <strong>User</strong> मा रहेको Active Username र Password प्रयोग गर्नुहोस्।</p>
+      <form id="login-form">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button id="login-button" class="btn btn-primary" type="submit" disabled>Connecting...</button>
+      </form>
+      <p class="message" id="login-message" role="status">सुरक्षित सर्भरसँग जडान हुँदैछ...</p>
+      <div class="notice">Inactive प्रयोगकर्ता लगइन गर्न सक्दैनन्। Username वा Password GitHub मा राखिएको छैन।</div>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="heading">
+        <div>
+          <div class="eyebrow">Feedback Management</div>
+          <h1>Feedback Dashboard</h1>
+          <p class="subtle" id="welcome"></p>
+        </div>
+        <div class="heading-actions">
+          <button class="btn" id="audit-button" type="button">Audit History</button>
+          <button class="btn" id="refresh-button" type="button">Refresh</button>
+          <button class="btn" id="logout-button" type="button">Logout</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Total Feedback</span><strong id="stat-total">0</strong></div>
+        <div class="panel stat"><span>Pending</span><strong id="stat-pending">0</strong></div>
+        <div class="panel stat"><span>Reviewed</span><strong id="stat-reviewed">0</strong></div>
+        <div class="panel stat"><span>Resolved</span><strong id="stat-resolved">0</strong></div>
+      </div>
+      <section class="panel" id="feedback-section">
+        <div class="controls">
+          <input id="filter-search" type="search" placeholder="Search name, club, rule or feedback..." aria-label="Search feedback">
+          <select id="filter-status" aria-label="Filter status">
+            <option value="all">All statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date / ID</th><th>Member</th><th>Type / Rule</th><th>Feedback</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="feedback-rows"></tbody>
+          </table>
+        </div>
+        <p class="message" id="dashboard-message" role="status"></p>
+      </section>
+      <section class="panel review" id="review-panel" hidden>
+        <div class="review-head"><h2>Review Feedback</h2><button class="btn" id="review-close" type="button">Close</button></div>
+        <p class="subtle" id="review-id"></p>
+        <div style="border:1px solid var(--border);padding:15px;border-radius:12px;margin-bottom:16px"><strong>Original manual reference (read only)</strong><p id="review-rule" class="subtle"></p><p id="review-snapshot" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:230px;overflow:auto"></p></div><strong>Member suggestion</strong><p id="review-original" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
+        <form id="review-form">
+          <div class="review-grid">
+            <div class="field"><label for="review-status">Status</label>
+              <select id="review-status"><option>Pending</option><option>Reviewed</option><option>Resolved</option></select>
+            </div>
+            <div class="field"><label for="review-remarks">Internal Admin Remarks</label>
+              <textarea id="review-remarks" rows="3" maxlength="1500"></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="save-review" type="submit">Save Review</button>
+        </form>
+      </section>
+      <section class="panel review" id="audit-panel" hidden>
+        <div class="review-head"><h2>Feedback Audit History</h2><button class="btn" id="audit-close" type="button">Close</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Date</th><th>Feedback ID</th><th>Old → New</th><th>Reviewed by</th><th>Remarks</th></tr></thead>
+          <tbody id="audit-rows"></tbody>
+        </table></div>
+      </section>
+    </section>
+  </main>
+  <footer class="footer">Designed &amp; Developed by <strong>Nirajan Aryal</strong> (<a href="tel:9851113811">9851113811</a>)</footer>
+
+  <!-- Hidden RPC frame. The admin UI and all CSS/JS are hosted on GitHub. -->
+  <iframe id="admin-bridge" title="Secure backend connection" hidden></iframe>
+
+  <script>
+    'use strict';
+
+    /* ============================================================
+       GITHUB UI → APPS SCRIPT BRIDGE → PRIVATE GOOGLE SHEET
+       No passwords, admin tokens or private feedback are in JSON files.
+       ============================================================ */
+    const CONFIG = Object.freeze({
+      appsScriptUrl: 'https://script.google.com/macros/s/AKfycbx-jJumHusyGI1OgSiyyH7KxcmEle1Rfi_CiW9tOTVeKiQZxA5eLqDMiakaqG_U8MiPPQ/exec',
+      requestTimeoutMs: 30000
+    });
+
+    const $ = id => document.getElementById(id);
+    const state = { ready: false, requests: new Map(), feedback: [], selectedId: '' };
+
+    function setMessage(id, text, error = false) {
+      const element = $(id);
+      element.textContent = text;
+      element.classList.toggle('error', error);
+    }
+
+    function makeCell(row, value, className = '') {
+      const cell = document.createElement('td');
+      if (className) cell.className = className;
+      cell.textContent = String(value == null ? '' : value);
+      row.append(cell);
+      return cell;
+    }
+
+    function request(action, args = {}) {
+      if (!state.ready) return Promise.reject(new Error('Backend is not connected.'));
+      return new Promise((resolve, reject) => {
+        const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+        const timeout = setTimeout(() => {
+          state.requests.delete(id);
+          reject(new Error('Backend request timed out. Check Apps Script deployment.'));
+        }, CONFIG.requestTimeoutMs);
+        state.requests.set(id, { resolve, reject, timeout });
+        $('admin-bridge').contentWindow.postMessage({
+          source: 'district325f-admin-ui', id, action, args
+        }, '*'); // Bridge verifies event.origin and event.source before handling.
+      });
+    }
+
+    window.addEventListener('message', event => {
+      if (event.source !== $('admin-bridge').contentWindow) return;
+      if (!/^https:\/\/(?:script\.google\.com|[a-z0-9.-]+\.googleusercontent\.com)$/.test(event.origin)) return;
+      const message = event.data;
+      if (!message || message.source !== 'district325f-admin-bridge') return;
+      if (message.action === 'ready') {
+        state.ready = true;
+        $('login-button').disabled = false;
+        setMessage('login-message', 'सर्भर जडान भयो। Login गर्न सक्नुहुन्छ।');
+        return;
+      }
+      const pending = state.requests.get(message.id);
+      if (!pending) return;
+      clearTimeout(pending.timeout);
+      state.requests.delete(message.id);
+      if (message.ok) pending.resolve(message.result);
+      else pending.reject(new Error(message.result?.error || 'Request failed'));
+    });
+
+    async function loadFeedback() {
+      setMessage('dashboard-message', 'Loading feedback...');
+      try {
+        state.feedback = await request('list');
+        updateStats();
+        renderFeedback();
+        setMessage('dashboard-message', state.feedback.length + ' feedback records loaded.');
+      } catch (error) {
+        setMessage('dashboard-message', error.message, true);
+        if (/session expired|inactive or removed|login required/i.test(error.message)) showLogin();
+      }
+    }
+
+    function updateStats() {
+      $('stat-total').textContent = state.feedback.length;
+      ['Pending', 'Reviewed', 'Resolved'].forEach(status => {
+        $('stat-' + status.toLowerCase()).textContent =
+          state.feedback.filter(item => item.Status === status).length;
+      });
+    }
+
+    function renderFeedback() {
+      const search = $('filter-search').value.trim().toLowerCase();
+      const status = $('filter-status').value;
+      const tbody = $('feedback-rows');
+      tbody.replaceChildren();
+      const filtered = state.feedback.filter(item => {
+        const content = [item.Feedback_ID, item.Name, item.Club, item.Type,
+          item.Rule_ID, item.Message].join(' ').toLowerCase();
+        return (status === 'all' || item.Status === status) && content.includes(search);
+      });
+      if (!filtered.length) {
+        const row = document.createElement('tr');
+        const cell = makeCell(row, 'No feedback matches this filter.');
+        cell.colSpan = 6;
+        cell.className = 'empty';
+        tbody.append(row);
+        return;
+      }
+      filtered.forEach(item => {
+        const row = document.createElement('tr');
+        makeCell(row, item.Submitted_At + '\n' + item.Feedback_ID);
+        makeCell(row, [item.Name || 'Anonymous', item.Club || '—'].join('\n'));
+        makeCell(row, [item.Type, item.Language, item.Rule_ID || '—'].join(' · '));
+        makeCell(row, item.Message, 'message-cell');
+        const statusCell = document.createElement('td');
+        const pill = document.createElement('span');
+        pill.className = 'status-pill ' + String(item.Status).toLowerCase();
+        pill.textContent = item.Status;
+        statusCell.append(pill);
+        row.append(statusCell);
+        const actionCell = document.createElement('td');
+        const button = document.createElement('button');
+        button.className = 'btn';
+        button.type = 'button';
+        button.textContent = 'Review';
+        button.addEventListener('click', () => openReview(item));
+        actionCell.append(button);
+        row.append(actionCell);
+        tbody.append(row);
+      });
+    }
+
+    function openReview(item) {
+      state.selectedId = item.Feedback_ID;
+      $('review-id').textContent = item.Feedback_ID + ' · ' + item.Submitted_At;
+      $('review-original').textContent = item.Message;
+      $('review-rule').textContent = [item.Feedback_Scope || 'General', item.Language, item.Rule_ID, item.Rule_Title].filter(Boolean).join(' · ');
+      $('review-snapshot').textContent = item.Original_Text_Snapshot || 'General feedback — no rule selected.';
+      $('review-status').value = item.Status;
+      $('review-remarks').value = item.Admin_Remarks || '';
+      $('review-panel').hidden = false;
+      $('review-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function showLogin() {
+      $('login-panel').hidden = false;
+      $('dashboard').hidden = true;
+      $('password').value = '';
+    }
+
+    $('login-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      $('login-button').disabled = true;
+      setMessage('login-message', 'Verifying account...');
+      try {
+        const result = await request('login', {
+          username: $('username').value,
+          password: $('password').value
+        });
+        $('password').value = '';
+        $('login-panel').hidden = true;
+        $('dashboard').hidden = false;
+        $('welcome').textContent = 'Signed in as ' + result.username + ' · Active account';
+        await loadFeedback();
+      } catch (error) {
+        setMessage('login-message', error.message, true);
+      } finally {
+        $('login-button').disabled = !state.ready;
+      }
+    });
+
+    $('review-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      $('save-review').disabled = true;
+      setMessage('dashboard-message', 'Saving review...');
+      try {
+        await request('update', {
+          id: state.selectedId,
+          status: $('review-status').value,
+          remarks: $('review-remarks').value
+        });
+        $('review-panel').hidden = true;
+        await loadFeedback();
+      } catch (error) {
+        setMessage('dashboard-message', error.message, true);
+      } finally {
+        $('save-review').disabled = false;
+      }
+    });
+
+    $('audit-button').addEventListener('click', async () => {
+      $('audit-panel').hidden = false;
+      const tbody = $('audit-rows');
+      tbody.replaceChildren();
+      try {
+        const entries = await request('audit');
+        entries.forEach(item => {
+          const row = document.createElement('tr');
+          makeCell(row, item.Date);
+          makeCell(row, item.Feedback_ID);
+          makeCell(row, item.Old_Status + ' → ' + item.New_Status);
+          makeCell(row, item.Reviewed_By);
+          makeCell(row, item.Admin_Remarks);
+          tbody.append(row);
+        });
+        if (!entries.length) {
+          const row = document.createElement('tr');
+          const cell = makeCell(row, 'No review history yet.');
+          cell.colSpan = 5;
+          tbody.append(row);
+        }
+        $('audit-panel').scrollIntoView({ behavior: 'smooth' });
+      } catch (error) {
+        setMessage('dashboard-message', error.message, true);
+      }
+    });
+
+    $('logout-button').addEventListener('click', async () => {
+      try { await request('logout'); } catch (_) {}
+      showLogin();
+      setMessage('login-message', 'Logged out.');
+    });
+
+    $('refresh-button').addEventListener('click', loadFeedback);
+    $('review-close').addEventListener('click', () => { $('review-panel').hidden = true; });
+    $('audit-close').addEventListener('click', () => { $('audit-panel').hidden = true; });
+    $('filter-search').addEventListener('input', renderFeedback);
+    $('filter-status').addEventListener('change', renderFeedback);
+
+    $('admin-bridge').src = CONFIG.appsScriptUrl + '?action=bridge';
+    setTimeout(() => {
+      if (!state.ready) {
+        setMessage('login-message',
+          'Backend connection timed out. Deploy the updated Code.gs as a new version.', true);
+      }
+    }, 20000);
+  </script>
+</body>
+</html>
