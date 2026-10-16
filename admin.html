@@ -109,7 +109,7 @@
     <section id="login-panel" class="panel login">
       <div class="eyebrow">Secure Administration</div>
       <h1>Admin Login</h1>
-      <p class="subtle">Google Sheet को <strong>User</strong> मा रहेको Active Username र Password प्रयोग गर्नुहोस्।</p>
+      
       <form id="login-form">
         <div class="field">
           <label for="username">Username</label>
@@ -119,10 +119,10 @@
           <label for="password">Password</label>
           <input id="password" name="password" type="password" autocomplete="current-password" required>
         </div>
-        <button id="login-button" class="btn btn-primary" type="submit" disabled>Connecting...</button>
+        <button id="login-button" class="btn btn-primary" type="submit">Login</button>
       </form>
-      <p class="message" id="login-message" role="status">सुरक्षित सर्भरसँग जडान हुँदैछ...</p>
-      <div class="notice">Inactive प्रयोगकर्ता लगइन गर्न सक्दैनन्। Username वा Password GitHub मा राखिएको छैन।</div>
+      <p class="message" id="login-message" role="status" aria-live="polite"></p>
+      
     </section>
 
     <section id="dashboard" hidden>
@@ -244,7 +244,7 @@
       if (message.action === 'ready') {
         state.ready = true;
         $('login-button').disabled = false;
-        setMessage('login-message', 'सर्भर जडान भयो। Login गर्न सक्नुहुन्छ।');
+        setMessage('login-message', '');
         return;
       }
       const pending = state.requests.get(message.id);
@@ -338,8 +338,17 @@
 
     $('login-form').addEventListener('submit', async event => {
       event.preventDefault();
+      if (!$('username').value.trim() || !$('password').value) {
+        setMessage('login-message', 'Username र Password भर्नुहोस्।', true);
+        return;
+      }
+      if (!state.ready) {
+        setMessage('login-message', 'सर्भरसँग सम्पर्क हुन सकेन। केही समयपछि पुनः प्रयास गर्नुहोस्।', true);
+        return;
+      }
       $('login-button').disabled = true;
-      setMessage('login-message', 'Verifying account...');
+      $('login-button').textContent = 'Verifying...';
+      setMessage('login-message', '');
       try {
         const result = await request('login', {
           username: $('username').value,
@@ -353,7 +362,8 @@
       } catch (error) {
         setMessage('login-message', error.message, true);
       } finally {
-        $('login-button').disabled = !state.ready;
+        $('login-button').disabled = false;
+        $('login-button').textContent = 'Login';
       }
     });
 
@@ -416,12 +426,8 @@
     $('filter-status').addEventListener('change', renderFeedback);
 
     $('admin-bridge').src = CONFIG.appsScriptUrl + '?action=bridge';
-    setTimeout(() => {
-      if (!state.ready) {
-        setMessage('login-message',
-          'Backend connection timed out. Deploy the updated Code.gs as a new version.', true);
-      }
-    }, 20000);
+    // Keep the login form usable; only a user-initiated login reports connection issues.
+    // The bridge handshake still runs in the background.
   </script>
 </body>
 </html>
