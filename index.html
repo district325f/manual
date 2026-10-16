@@ -145,6 +145,8 @@
     .article-feedback { display:inline-flex; align-items:center; gap:7px; margin-top:9px;
       font-size:13px; padding:8px 12px; color:var(--navy); border:1px solid var(--border);
       background:var(--soft); border-radius:9px; cursor:pointer; font-weight:600; }
+    .topic-heading { font-weight: 750; margin-bottom: 3px !important; }
+    .paragraph.topic-heading + .article-feedback { margin: 3px 0 18px; }
     .article-feedback:hover, .article-feedback:focus-visible { border-color:var(--navy); text-decoration:underline; }
     .article-feedback:focus-visible { outline:2px solid var(--navy); outline-offset:2px; }
     body.dark .article-feedback { color:#bcdcff; }
@@ -504,6 +506,25 @@
       return state.language + ':' + (state.activeRecord || records()[state.sections[state.sectionIndex].start].id);
     }
 
+    // Some official numbered topic headings were imported as Paragraph records.
+    // Treat only a standalone numbered topic heading as feedback-eligible;
+    // ordinary paragraphs, Roman subpoints and organization names remain read-only.
+    function isNumberedTopic(record) {
+      return String(record.kind || '').toLowerCase() === 'paragraph' &&
+        /^[\s]*[0-9०-९]{1,2}[.)।][\s]+\S/.test(String(record.text || '')) &&
+        String(record.text || '').trim().length <= 220;
+    }
+
+    function articleFeedbackButton(record, title) {
+      const button = create('button', 'article-feedback',
+        state.language === 'ne' ? '✎ यस शीर्षकमा सुझाव दिनुहोस्' : '✎ Suggest on this section');
+      button.type = 'button';
+      button.setAttribute('aria-label', (state.language === 'ne'
+        ? 'सुझाव दिनुहोस्: ' : 'Suggest on: ') + title);
+      button.addEventListener('click', () => openFeedback(record.id));
+      return button;
+    }
+
     function renderReader() {
       const reader = $('reader');
       reader.replaceChildren();
@@ -521,17 +542,9 @@
       actions.append(bookmark, share, listen);
       const header = create('div', 'reader-header');
       header.append(heading, actions);
-      // One contextual feedback action per official Article heading, never per paragraph.
-      // The article's original record ID is used as the immutable feedback reference.
       if (section.type === 'article') {
         const articleRecord = records()[section.start];
-        const suggest = create('button', 'article-feedback',
-          state.language === 'ne' ? '✎ यस धारामा सुझाव दिनुहोस्' : '✎ Suggest on this article');
-        suggest.type = 'button';
-        suggest.setAttribute('aria-label', (state.language === 'ne'
-          ? 'यस धारामा सुझाव दिनुहोस्: ' : 'Suggest on article: ') + section.title);
-        suggest.addEventListener('click', () => openFeedback(articleRecord.id));
-        heading.append(suggest);
+        heading.append(articleFeedbackButton(articleRecord, section.title));
       }
       reader.append(header);
       const body = create('div');
@@ -540,6 +553,11 @@
         paragraph.id = 'rule-' + record.id;
         if (!record.text) paragraph.classList.add('blank');
         body.append(paragraph);
+        // Numbered topic headings inside a Part also need a single feedback entry.
+        if (isNumberedTopic(record)) {
+          paragraph.classList.add('topic-heading');
+          body.append(articleFeedbackButton(record, record.text));
+        }
       });
       reader.append(body);
       const footer = create('div', 'reader-footer');
@@ -740,9 +758,20 @@
         item.type === 'article' && records()[item.start].id === record.id) : null;
       const preview = $('feedback-original-text');
       preview.replaceChildren();
-      const articleRecords = section
-        ? records().slice(section.start, section.end)
-        : (record ? [record] : []);
+      let articleRecords = [];
+      if (section) {
+        articleRecords = records().slice(section.start, section.end);
+      } else if (record && isNumberedTopic(record)) {
+        const all = records();
+        const start = all.findIndex(item => item.id === record.id);
+        let end = start + 1;
+        while (end < all.length &&
+          !['article', 'part'].includes(String(all[end].kind).toLowerCase()) &&
+          !isNumberedTopic(all[end])) end++;
+        articleRecords = all.slice(start, end);
+      } else if (record) {
+        articleRecords = [record];
+      }
       articleRecords.forEach(item => {
         const paragraph = create(
           'p',
@@ -750,6 +779,7 @@
           item.text
         );
         if (!item.text) paragraph.classList.add('blank');
+        if (isNumberedTopic(item)) paragraph.classList.add('topic-heading');
         preview.append(paragraph);
       });
       preview.scrollTop = 0;
