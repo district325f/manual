@@ -1,0 +1,14 @@
+{
+  "name": "Lions District 325F Digital Governance Manual",
+  "short_name": "325F Manual",
+  "description": "Official bilingual governance manual for Lions International District 325F Nepal",
+  "lang": "ne",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fa",
+  "theme_color": "#103660",
+  "icons": [
+    { "src": "./logo.png", "sizes": "any", "type": "image/png", "purpose": "any" }
+  ]
+}
