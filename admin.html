@@ -36,9 +36,12 @@
     .brand strong { display: block; font-size: 15px; letter-spacing: .3px; }
     .brand small { display: block; margin-top: 3px; color: #cbd8e9; font-size: 11px; }
     .back { border: 1px solid #ffffff70; color: #fff; padding: 9px 12px; border-radius: 9px; text-decoration: none; font-size: 12px; }
-    .wrap { max-width: 1240px; margin: 25px auto; padding: 0 20px; }
+    body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+    .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    #dashboard:not([hidden]) { width: 100%; }
+
     .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 12px 36px #102d5010; }
-    .login { width: min(100%, 450px); margin: 65px auto; padding: 30px; }
+    .login { width: min(100%, 450px); margin: 0 auto; padding: 30px; }
     .eyebrow { font-size: 11px; color: #a67c2d; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; }
     h1 { margin: 10px 0; font-size: clamp(23px, 3vw, 31px); }
     h2 { font-size: 18px; margin: 0; }
@@ -78,18 +81,18 @@
     .review-grid { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; }
     .review .btn { margin-top: 10px; }
     .empty { text-align: center; padding: 28px; color: var(--muted); }
-    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px 15px; }
+    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 12px 15px 18px; }
     .footer a { text-decoration: underline; }
     .notice { border-left: 3px solid var(--gold); background: #fffbf2; padding: 10px 13px; border-radius: 8px; font-size: 12px; color: #6d5935; }
     @media (max-width: 760px) {
-      .wrap { padding: 0 12px; margin: 15px auto; }
+      .wrap { padding: 18px 12px; }
       .topbar-inner { padding: 12px; }
       .brand strong { font-size: 12px; }
       .brand small { font-size: 10px; }
       .logo { width: 42px; height: 42px; }
       .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .review-grid { grid-template-columns: 1fr; }
-      .login { margin: 35px auto; padding: 22px; }
+      .login { margin: 0 auto; padding: 22px; }
     }
   </style>
 </head>
@@ -190,14 +193,14 @@
   <footer class="footer">Designed &amp; Developed by <strong>Nirajan Aryal</strong> (<a href="tel:9851113811">9851113811</a>)</footer>
 
   <!-- Hidden RPC frame. The admin UI and all CSS/JS are hosted on GitHub. -->
-  <iframe id="admin-bridge" title="Secure backend connection" hidden></iframe>
+  <iframe name="admin-response-frame" title="Server response" hidden></iframe>
 
   <script>
     'use strict';
 
     /* ============================================================
-       GITHUB UI → APPS SCRIPT BRIDGE → PRIVATE GOOGLE SHEET
-       No passwords, admin tokens or private feedback are in JSON files.
+       GITHUB UI → HTTPS FORM POST → APPS SCRIPT → PRIVATE GOOGLE SHEET
+       Credentials are sent only by HTTPS POST; session is memory-only.
        ============================================================ */
     const CONFIG = Object.freeze({
       appsScriptUrl: 'https://script.google.com/macros/s/AKfycbx-jJumHusyGI1OgSiyyH7KxcmEle1Rfi_CiW9tOTVeKiQZxA5eLqDMiakaqG_U8MiPPQ/exec',
@@ -205,7 +208,7 @@
     });
 
     const $ = id => document.getElementById(id);
-    const state = { ready: false, requests: new Map(), feedback: [], selectedId: '' };
+    const state = { requests: new Map(), feedback: [], selectedId: '', token: '' };
 
     function setMessage(id, text, error = false) {
       const element = $(id);
@@ -222,37 +225,44 @@
     }
 
     function request(action, args = {}) {
-      if (!state.ready) return Promise.reject(new Error('Backend is not connected.'));
       return new Promise((resolve, reject) => {
-        const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+        const nonce = crypto.randomUUID
+          ? crypto.randomUUID().replace(/-/g, '')
+          : String(Date.now()) + String(Math.random()).slice(2);
         const timeout = setTimeout(() => {
-          state.requests.delete(id);
-          reject(new Error('Backend request timed out. Check Apps Script deployment.'));
+          state.requests.delete(nonce);
+          reject(new Error('सर्भरबाट समयमा जवाफ आएन। Deployment र Access जाँच्नुहोस्।'));
         }, CONFIG.requestTimeoutMs);
-        state.requests.set(id, { resolve, reject, timeout });
-        $('admin-bridge').contentWindow.postMessage({
-          source: 'district325f-admin-ui', id, action, args
-        }, '*'); // Bridge verifies event.origin and event.source before handling.
+        state.requests.set(nonce, { resolve, reject, timeout });
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = CONFIG.appsScriptUrl;
+        form.target = 'admin-response-frame';
+        form.hidden = true;
+        const fields = { action: 'admin_' + action, nonce, token: state.token, ...args };
+        Object.entries(fields).forEach(([key, value]) => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = String(value == null ? '' : value);
+          form.append(input);
+        });
+        document.body.append(form);
+        form.submit();
+        form.remove();
       });
     }
 
     window.addEventListener('message', event => {
-      if (event.source !== $('admin-bridge').contentWindow) return;
       if (!/^https:\/\/(?:script\.google\.com|[a-z0-9.-]+\.googleusercontent\.com)$/.test(event.origin)) return;
       const message = event.data;
-      if (!message || message.source !== 'district325f-admin-bridge') return;
-      if (message.action === 'ready') {
-        state.ready = true;
-        $('login-button').disabled = false;
-        setMessage('login-message', '');
-        return;
-      }
-      const pending = state.requests.get(message.id);
+      if (!message || message.source !== 'district325f-admin-post') return;
+      const pending = state.requests.get(message.nonce);
       if (!pending) return;
       clearTimeout(pending.timeout);
-      state.requests.delete(message.id);
-      if (message.ok) pending.resolve(message.result);
-      else pending.reject(new Error(message.result?.error || 'Request failed'));
+      state.requests.delete(message.nonce);
+      if (message.ok) pending.resolve(message.data);
+      else pending.reject(new Error(message.error || 'Request failed'));
     });
 
     async function loadFeedback() {
@@ -334,16 +344,13 @@
       $('login-panel').hidden = false;
       $('dashboard').hidden = true;
       $('password').value = '';
+      state.token = '';
     }
 
     $('login-form').addEventListener('submit', async event => {
       event.preventDefault();
       if (!$('username').value.trim() || !$('password').value) {
         setMessage('login-message', 'Username र Password भर्नुहोस्।', true);
-        return;
-      }
-      if (!state.ready) {
-        setMessage('login-message', 'सर्भरसँग सम्पर्क हुन सकेन। केही समयपछि पुनः प्रयास गर्नुहोस्।', true);
         return;
       }
       $('login-button').disabled = true;
@@ -354,10 +361,11 @@
           username: $('username').value,
           password: $('password').value
         });
+        state.token = result.token;
         $('password').value = '';
         $('login-panel').hidden = true;
         $('dashboard').hidden = false;
-        $('welcome').textContent = 'Signed in as ' + result.username + ' · Active account';
+        $('welcome').textContent = 'Signed in as ' + result.username;
         await loadFeedback();
       } catch (error) {
         setMessage('login-message', error.message, true);
@@ -416,7 +424,7 @@
     $('logout-button').addEventListener('click', async () => {
       try { await request('logout'); } catch (_) {}
       showLogin();
-      setMessage('login-message', 'Logged out.');
+      setMessage('login-message', '');
     });
 
     $('refresh-button').addEventListener('click', loadFeedback);
@@ -425,9 +433,6 @@
     $('filter-search').addEventListener('input', renderFeedback);
     $('filter-status').addEventListener('change', renderFeedback);
 
-    $('admin-bridge').src = CONFIG.appsScriptUrl + '?action=bridge';
-    // Keep the login form usable; only a user-initiated login reports connection issues.
-    // The bridge handshake still runs in the background.
   </script>
 </body>
 </html>
